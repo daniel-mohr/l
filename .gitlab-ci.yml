@@ -3,14 +3,14 @@ variables:
   APT_GET_INSTALL: "DEBIAN_FRONTEND=noninteractive apt-get install -q -y"
 
 stages:
-  - .pre
+  - pre
   - build
   - test
   - deploy
   - .post
 
-run_pre_commit:
-  stage: .pre
+pre-commit:
+  stage: pre
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
@@ -26,4 +26,5 @@ run_pre_commit:
     - pycodestyle --show-source --show-pep8 --statistics $(find -name "*.py")
     # run pylint
     - pylint $(find -name "*.py")
-    - echo -e "\nskipped files: \n$(grep -irl skip-file *)"
+    - echo -e "\nskipped files:"
+    - echo -e "$(grep -irl skip-file *)"
