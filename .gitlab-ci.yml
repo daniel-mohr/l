@@ -10,7 +10,6 @@ stages:
   - post
 
 pre-commit:
-  when: never
   stage: pre
   image:
     # https://hub.docker.com/_/debian
@@ -25,7 +24,6 @@ pre-commit:
     - pre-commit run --all-files
 
 pycodestyle:
-  when: never
   stage: pre
   image:
     # https://hub.docker.com/_/debian
@@ -38,7 +36,6 @@ pycodestyle:
     - pycodestyle --show-source --show-pep8 --statistics $(find -name "*.py")
 
 pylint:
-  when: never
   stage: pre
   allow_failure: true
   image:
@@ -54,7 +51,6 @@ pylint:
     - echo -e "$(grep -irl skip-file *)"
 
 .debian_based_unittest_template: &debian_based_unittest
-  when: never
   stage: test
   parallel:
     matrix:
@@ -115,7 +111,7 @@ deploy_to_github:
     - git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
 
 deploy_to_github:
-  stage: deploy
+  stage: pre
   image:
     # https://hub.docker.com/_/alpine
     name: alpine:latest
