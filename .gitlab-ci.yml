@@ -9,7 +9,7 @@ stages:
   - deploy
   - .post
 
-pre-commit:
+run_pre-commit:
   stage: .pre
   image:
     # https://hub.docker.com/_/debian
