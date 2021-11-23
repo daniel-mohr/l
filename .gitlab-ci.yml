@@ -10,7 +10,7 @@ stages:
   - post
 
 deploy_to_github:
-  stage: pre
+  stage: deploy
   image:
     # https://hub.docker.com/_/alpine
     name: alpine:latest
@@ -19,14 +19,9 @@ deploy_to_github:
     - apk add --no-cache git openssh
     - mkdir ~/.ssh && chmod 700 ~/.ssh
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    - echo $github_deploy_key
-    - ls -lah $github_deploy_key
     - mv $github_deploy_key ~/.ssh/id_ed25519
-    #- echo $github_deploy_key > ~/.ssh/id_ed25519
-    #- chmod 600 ~/.ssh/id_ed25519
-    - ls -lah ~/.ssh/
-    - cat ~/.ssh/id_ed25519
-    #- git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
+    - chmod 600 ~/.ssh/id_ed25519
+    - git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
 
 pre-commit:
   stage: pre
