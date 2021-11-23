@@ -9,6 +9,26 @@ stages:
   - deploy
   - post
 
+deploy_to_github:
+  stage: pre
+  image:
+    # https://hub.docker.com/_/alpine
+    name: alpine:latest
+  script:
+    - date
+    - apk add --no-cache git openssh
+    - echo $HOME
+    - ls -lah $HOME
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - echo $github_deploy_key
+    - ls -lah $github_deploy_key
+    - cp -p $github_deploy_key ~/.ssh/id_ed25519
+    #- echo $github_deploy_key > ~/.ssh/id_ed25519
+    #- chmod 600 ~/.ssh/id_ed25519
+    - ls -lah ~/.ssh/
+    - cat ~/.ssh/id_ed25519
+    #- git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
+
 pre-commit:
   stage: pre
   image:
@@ -109,21 +129,3 @@ deploy_to_github:
     - apt-get update
     - $APT_GET_INSTALL git
     - git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
-
-deploy_to_github:
-  stage: pre
-  image:
-    # https://hub.docker.com/_/alpine
-    name: alpine:latest
-  script:
-    - date
-    - apk add --no-cache git openssh
-    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    - echo $github_deploy_key
-    - ls -lah $github_deploy_key
-    - cp -p $github_deploy_key ~/.ssh/id_ed25519
-    #- echo $github_deploy_key > ~/.ssh/id_ed25519
-    #- chmod 600 ~/.ssh/id_ed25519
-    - ls -lah ~/.ssh/
-    - cat ~/.ssh/id_ed25519
-    #- git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
