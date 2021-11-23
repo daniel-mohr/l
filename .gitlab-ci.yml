@@ -7,10 +7,10 @@ stages:
   - build
   - test
   - deploy
-  - .post
+  - post
 
 pre-commit:
-  # when: never
+  when: never
   stage: pre
   image:
     # https://hub.docker.com/_/debian
@@ -25,7 +25,7 @@ pre-commit:
     - pre-commit run --all-files
 
 pycodestyle:
-  # when: never
+  when: never
   stage: pre
   image:
     # https://hub.docker.com/_/debian
@@ -38,7 +38,7 @@ pycodestyle:
     - pycodestyle --show-source --show-pep8 --statistics $(find -name "*.py")
 
 pylint:
-  # when: never
+  when: never
   stage: pre
   allow_failure: true
   image:
@@ -54,6 +54,7 @@ pylint:
     - echo -e "$(grep -irl skip-file *)"
 
 .debian_based_unittest_template: &debian_based_unittest
+  when: never
   stage: test
   parallel:
     matrix:
@@ -98,6 +99,35 @@ ubuntu_unittest:
 
 debian_unittest:
   image:
-    # https://hub.docker.com/_/ubuntu
+    # https://hub.docker.com/_/debian
     name: debian:latest
   <<: *debian_based_unittest
+
+deploy_to_github:
+  stage: deploy
+  image:
+    # https://hub.docker.com/_/debian
+    name: debian:latest
+  script:
+    - date
+    - apt-get update
+    - $APT_GET_INSTALL git
+    - git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
+
+deploy_to_github:
+  stage: deploy
+  image:
+    # https://hub.docker.com/_/alpine
+    name: alpine:latest
+  script:
+    - date
+    - apk add --no-cache git openssh
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - echo $github_deploy_key
+    - ls -lah $github_deploy_key
+    - cp -p $github_deploy_key ~/.ssh/id_ed25519
+    #- echo $github_deploy_key > ~/.ssh/id_ed25519
+    #- chmod 600 ~/.ssh/id_ed25519
+    - ls -lah ~/.ssh/
+    - cat ~/.ssh/id_ed25519
+    #- git push --all --prune --mirror --tags git@github.com:daniel-mohr/l.git
