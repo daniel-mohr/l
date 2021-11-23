@@ -55,9 +55,15 @@ pylint:
 
 .debian_based_unittest_template: &debian_based_unittest
   stage: test
+  parallel:
+    matrix:
+      - install_method:
+          - basic
+          - pip
   script:
     - apt-get update
     - $APT_GET_INSTALL python3-setuptools hashdeep
+    - echo $install_method
     - env python3 setup.py check_modules
     - python3 setup.py install
     # run pfu
