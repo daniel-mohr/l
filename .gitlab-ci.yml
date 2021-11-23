@@ -18,14 +18,43 @@ pre-commit:
   script:
     - date
     - apt-get update
-    - $APT_GET_INSTALL python3-pip git cargo pycodestyle pylint python3-pytest
+    - $APT_GET_INSTALL python3-pip git cargo
     - pip3 install pre-commit
     # run pre-commit
     - pre-commit --version
     - pre-commit run --all-files
+
+pycodestyle:
+  # when: never
+  stage: pre
+  image:
+    # https://hub.docker.com/_/debian
+    name: debian:latest
+  script:
+    - date
+    - apt-get update
+    - $APT_GET_INSTALL pycodestyle
     # check PEP 8 code style (pycodestyle was formerly called pep8)
     - pycodestyle --show-source --show-pep8 --statistics $(find -name "*.py")
+
+pylint:
+  # when: never
+  stage: pre
+  allow_failure: true
+  image:
+    # https://hub.docker.com/_/debian
+    name: debian:latest
+  script:
+    - date
+    - apt-get update
+    - $APT_GET_INSTALL pylint python3-pytest
     # run pylint
     - pylint $(find -name "*.py")
     - echo -e "\nskipped files:"
     - echo -e "$(grep -irl skip-file *)"
+
+ubuntu_test_doc:
+  stage: test
+  image:
+    # https://hub.docker.com/_/ubuntu
+    name: ubuntu:18.04
