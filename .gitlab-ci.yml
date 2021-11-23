@@ -52,3 +52,48 @@ pylint:
     - pylint $(find -name "*.py")
     - echo -e "\nskipped files:"
     - echo -e "$(grep -irl skip-file *)"
+
+.debian_based_unittest_template: &debian_based_unittest
+  stage: test
+  script:
+    - apt-get update
+    - $APT_GET_INSTALL python3-setuptools hashdeep
+    - env python3 setup.py check_modules
+    - python3 setup.py install
+    # run pfu
+    - which pfu
+    - pfu -h
+    # unittest
+    - env python3 setup.py run_unittest
+    # install dependencies for pytest
+    - $APT_GET_INSTALL python3-pytest python3-pytest-cov python3-pytest-xdist
+    # pytest
+    - env python3 setup.py run_pytest --parallel --coverage
+
+ubuntu1804_unittest:
+  stage: test
+  image:
+    # https://hub.docker.com/_/ubuntu
+    name: ubuntu:18.04
+  <<: *&debian_based_unittest
+
+ubuntu2004_unittest:
+  stage: test
+  image:
+    # https://hub.docker.com/_/ubuntu
+    name: ubuntu:20.04
+  <<: *&debian_based_unittest
+
+ubuntu_unittest:
+  stage: test
+  image:
+    # https://hub.docker.com/_/ubuntu
+    name: ubuntu:latest
+  <<: *&debian_based_unittest
+
+debian_unittest:
+  stage: test
+  image:
+    # https://hub.docker.com/_/ubuntu
+    name: debian:latest
+  <<: *&debian_based_unittest
