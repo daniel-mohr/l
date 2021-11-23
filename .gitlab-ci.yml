@@ -19,6 +19,8 @@ deploy_to_github:
     - apk add --no-cache git openssh
     - echo $HOME
     - ls -lah $HOME
+    - mkdir ~/.ssh && chmod 700 ~/.ssh
+    - ls -lah $HOME
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     - echo $github_deploy_key
     - ls -lah $github_deploy_key
