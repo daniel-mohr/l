@@ -3,14 +3,14 @@ variables:
   APT_GET_INSTALL: "DEBIAN_FRONTEND=noninteractive apt-get install -q -y"
 
 stages:
-  - pre
+  - .pre
   - build
   - test
   - deploy
   - .post
 
 pre-commit:
-  stage: pre
+  stage: .pre
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
