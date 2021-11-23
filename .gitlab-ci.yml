@@ -100,10 +100,9 @@ debian_unittest:
 
 unittests:
   stage: pre
-  image: iamges
   parallel:
     matrix:
-      - images:
+      - image:
           - ubuntu:18.04
           - ubuntu:20.04
           - ubuntu:latest
