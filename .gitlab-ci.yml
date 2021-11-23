@@ -1,6 +1,6 @@
 variables:
-  DEPLOY_SITE: "https://example.com/"
-  APT_GET_INSTALL: "DEBIAN_FRONTEND=noninteractive apt-get install -q -y"
+  DEBIAN_FRONTEND: noninteractive
+  APT_GET_INSTALL: "apt-get install -q -y"
 
 stages:
   - .pre
