@@ -97,3 +97,15 @@ debian_unittest:
     # https://hub.docker.com/_/ubuntu
     name: debian:latest
   <<: *debian_based_unittest
+
+matrix:
+  image:
+    ubuntu:18.04
+    ubuntu:20.04
+    ubuntu:latest
+    debian:latest
+
+unittests:
+  stage: pre
+  matrix: {}
+  script: echo "Setup!"
