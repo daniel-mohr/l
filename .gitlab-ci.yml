@@ -75,25 +75,25 @@ ubuntu1804_unittest:
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:18.04
-  <<: *&debian_based_unittest
+  <<: *debian_based_unittest
 
 ubuntu2004_unittest:
   stage: test
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:20.04
-  <<: *&debian_based_unittest
+  <<: *debian_based_unittest
 
 ubuntu_unittest:
   stage: test
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:latest
-  <<: *&debian_based_unittest
+  <<: *debian_based_unittest
 
 debian_unittest:
   stage: test
   image:
     # https://hub.docker.com/_/ubuntu
     name: debian:latest
-  <<: *&debian_based_unittest
+  <<: *debian_based_unittest
