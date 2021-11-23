@@ -67,7 +67,7 @@ pylint:
     - test 'pip' = $install_method && $APT_GET_INSTALL python3-setuptools python3-pip hashdeep
     - env python3 setup.py check_modules
     - test 'basic' = $install_method && python3 setup.py install
-    - test 'basic' = $install_method && pip3 install .
+    - test 'pip' = $install_method && pip3 install .
     # run pfu
     - which pfu
     - pfu -h
