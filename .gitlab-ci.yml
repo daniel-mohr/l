@@ -52,9 +52,3 @@ pylint:
     - pylint $(find -name "*.py")
     - echo -e "\nskipped files:"
     - echo -e "$(grep -irl skip-file *)"
-
-ubuntu_test_doc:
-  stage: test
-  image:
-    # https://hub.docker.com/_/ubuntu
-    name: ubuntu:18.04
