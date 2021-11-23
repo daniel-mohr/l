@@ -17,14 +17,11 @@ deploy_to_github:
   script:
     - date
     - apk add --no-cache git openssh
-    - echo $HOME
-    - ls -lah $HOME
     - mkdir ~/.ssh && chmod 700 ~/.ssh
-    - ls -lah $HOME
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     - echo $github_deploy_key
     - ls -lah $github_deploy_key
-    - cp -p $github_deploy_key ~/.ssh/id_ed25519
+    - mv $github_deploy_key ~/.ssh/id_ed25519
     #- echo $github_deploy_key > ~/.ssh/id_ed25519
     #- chmod 600 ~/.ssh/id_ed25519
     - ls -lah ~/.ssh/
