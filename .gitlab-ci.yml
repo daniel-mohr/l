@@ -1,0 +1,29 @@
+variables:
+  DEPLOY_SITE: "https://example.com/"
+  APT_GET_INSTALL: "DEBIAN_FRONTEND=noninteractive apt-get install -q -y"
+
+stages:
+  - .pre
+  - build
+  - test
+  - deploy
+  - .post
+
+pre-commit:
+  stage: .pre
+  image:
+    # https://hub.docker.com/_/debian
+    name: debian:latest
+  script:
+    - date
+    - apt-get update
+    - $APT_GET_INSTALL python3-pip git cargo pycodestyle pylint
+    - pip3 install pre-commit
+    # run pre-commit
+    - pre-commit --version
+    - pre-commit run --all-files
+    # check PEP 8 code style (pycodestyle was formerly called pep8)
+    - pycodestyle --show-source --show-pep8 --statistics $(find -name "*.py")
+    # run pylint
+    - pylint $(find -name "*.py")
+    - echo -e "\nskipped files: \n$(grep -irl skip-file *)"
