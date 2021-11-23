@@ -98,14 +98,13 @@ debian_unittest:
     name: debian:latest
   <<: *debian_based_unittest
 
-matrix:
-  image:
-    ubuntu:18.04
-    ubuntu:20.04
-    ubuntu:latest
-    debian:latest
-
 unittests:
   stage: pre
-  matrix: {}
+  image: iamges
+  parallel:
+    matrix:
+      - images:
+          - ubuntu:18.04
+          - ubuntu:20.04
+          - ubuntu:latest
   script: echo "Setup!"
