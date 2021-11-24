@@ -11,6 +11,7 @@ stages:
 
 pre-commit:
   stage: pre
+  when: always
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
@@ -25,6 +26,7 @@ pre-commit:
 
 pycodestyle:
   stage: pre
+  when: always
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
@@ -37,6 +39,7 @@ pycodestyle:
 
 pylint:
   stage: pre
+  when: always
   allow_failure: true
   image:
     # https://hub.docker.com/_/debian
