@@ -22,11 +22,9 @@ deploy_to_github:
     - mv $github_deploy_key ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - repopath=$(mktemp -d)
-    - echo ${CI_PROJECT_URL}
     - echo ${CI_REPOSITORY_URL}
-    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_PROJECT_URL} $repopath
+    - git clone ${CI_REPOSITORY_URL} $repopath
     - (cd $repopath && git push --prune --mirror git@github.com:daniel-mohr/l.git)
-    #https://gitlab.com/daniel_mohr/l.git
 
 pre-commit:
   stage: pre
