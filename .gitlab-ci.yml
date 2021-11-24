@@ -75,30 +75,6 @@ pylint:
     # pytest
     - env python3 setup.py run_pytest --parallel --coverage
 
-ubuntu1804_unittest:
-  image:
-    # https://hub.docker.com/_/ubuntu
-    name: ubuntu:18.04
-  <<: *debian_based_unittest
-
-ubuntu2004_unittest:
-  image:
-    # https://hub.docker.com/_/ubuntu
-    name: ubuntu:20.04
-  <<: *debian_based_unittest
-
-ubuntu_unittest:
-  image:
-    # https://hub.docker.com/_/ubuntu
-    name: ubuntu:latest
-  <<: *debian_based_unittest
-
-debian_unittest:
-  image:
-    # https://hub.docker.com/_/debian
-    name: debian:latest
-  <<: *debian_based_unittest
-
 deploy_to_github:
   stage: deploy
   image:
@@ -111,4 +87,6 @@ deploy_to_github:
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     - mv $github_deploy_key ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
-    - git push --prune --mirror git@github.com:daniel-mohr/l.git
+    - repopath=$(mktemp -d)
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_PROJECT_URL} $repopath
+    - cd $repopath && git push --prune --mirror git@github.com:daniel-mohr/l.git
