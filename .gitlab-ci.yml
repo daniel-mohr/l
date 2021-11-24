@@ -9,6 +9,7 @@ stages:
   - deploy
 
 pre-commit:
+  stage: pre
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
