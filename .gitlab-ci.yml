@@ -53,6 +53,7 @@ pylint:
   stage: test
   rules:
     - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   parallel:
     matrix:
       - install_method:
@@ -76,29 +77,62 @@ pylint:
     # pytest
     - env python3 setup.py run_pytest --parallel --coverage
 
-ubuntu1804_unittest:
+ubuntu:18.04_unittest:
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:18.04
   <<: *debian_based_unittest
 
-ubuntu2004_unittest:
+ubuntu:20.04_unittest:
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:20.04
   <<: *debian_based_unittest
 
-ubuntu_unittest:
+ubuntu:latest_unittest:
   image:
     # https://hub.docker.com/_/ubuntu
     name: ubuntu:latest
   <<: *debian_based_unittest
 
-debian_unittest:
+debian:latest_unittest:
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
   <<: *debian_based_unittest
+
+i386_debian:latest_unittest:
+  image:
+    # https://hub.docker.com/_/debian
+    name: i386/debian:latest
+  <<: *debian_based_unittest
+
+.suse_based_unittest_template: &suse_based_unittest
+  stage: test
+  rules:
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - date
+    - zypper --non-interactive install which python3 python3-setuptools python3-pytest python3-pytest-cov python3-pytest-xdist hashdeep
+    - env python3 -V
+    - env python3 setup.py check_modules
+    - env python3 setup.py install
+    - pfu -h
+    - env python3 setup.py run_unittest
+    - env python3 setup.py run_pytest --parallel --coverage
+
+opensuse_leap:15.2_unittest:
+  image:
+    # https://hub.docker.com/r/opensuse/leap
+    name: opensuse/leap:15.2
+  <<: *suse_based_unittest
+
+opensuse_leap:15.3_unittest:
+  image:
+    # https://hub.docker.com/r/opensuse/leap
+    name: opensuse/leap:15.3
+  <<: *suse_based_unittest
 
 deploy_to_github:
   stage: deploy
