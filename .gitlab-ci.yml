@@ -4,14 +4,14 @@ variables:
 
 stages:
   - pre
+  - check_coding_style
   - build
   - test
   - deploy
   - post
 
 pre-commit:
-  stage: pre
-  when: always
+  stage: check_coding_style
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
