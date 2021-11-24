@@ -7,24 +7,6 @@ stages:
   - build
   - test
   - deploy
-  - post
-
-deploy_to_github:
-  stage: pre
-  image:
-    # https://hub.docker.com/_/alpine
-    name: alpine:latest
-  script:
-    - date
-    - apk add --no-cache git openssh
-    - mkdir ~/.ssh && chmod 700 ~/.ssh
-    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    - mv $github_deploy_key ~/.ssh/id_ed25519
-    - chmod 600 ~/.ssh/id_ed25519
-    - repopath=$(mktemp -d)
-    - echo ${CI_REPOSITORY_URL}
-    - git clone ${CI_REPOSITORY_URL} $repopath
-    - (cd $repopath && git push --prune --mirror git@github.com:daniel-mohr/l.git)
 
 pre-commit:
   stage: pre
@@ -69,6 +51,8 @@ pylint:
 
 .debian_based_unittest_template: &debian_based_unittest
   stage: test
+  rules:
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME'
   parallel:
     matrix:
       - install_method:
@@ -115,3 +99,21 @@ debian_unittest:
     # https://hub.docker.com/_/debian
     name: debian:latest
   <<: *debian_based_unittest
+
+deploy_to_github:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  image:
+    # https://hub.docker.com/_/alpine
+    name: alpine:latest
+  script:
+    - date
+    - apk add --no-cache git openssh
+    - mkdir ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    - mv $github_deploy_key ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - repopath=$(mktemp -d)
+    - git clone ${CI_REPOSITORY_URL} $repopath
+    - (cd $repopath && git push --prune --mirror git@github.com:daniel-mohr/l.git)
