@@ -4,14 +4,12 @@ variables:
 
 stages:
   - pre
-  - check_coding_style
   - build
   - test
   - deploy
   - post
 
 pre-commit:
-  stage: check_coding_style
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
@@ -26,7 +24,6 @@ pre-commit:
 
 pycodestyle:
   stage: pre
-  when: always
   image:
     # https://hub.docker.com/_/debian
     name: debian:latest
@@ -39,7 +36,6 @@ pycodestyle:
 
 pylint:
   stage: pre
-  when: always
   allow_failure: true
   image:
     # https://hub.docker.com/_/debian
@@ -105,7 +101,7 @@ debian_unittest:
   <<: *debian_based_unittest
 
 deploy_to_github:
-  stage: pre
+  stage: deploy
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   image:
