@@ -111,4 +111,4 @@ deploy_to_github:
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
     - mv $github_deploy_key ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
-    - git push --all --prune --mirror git@github.com:daniel-mohr/l.git
+    - git push --prune --mirror git@github.com:daniel-mohr/l.git
